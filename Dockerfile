@@ -8,6 +8,7 @@ RUN --mount=type=cache,target=/var/cache \
         python3-aiofiles \
         python3-httpx \
         vte291-gtk4 \
+        fakeroot \
         chezmoi \
         zoxide \
         starship \
