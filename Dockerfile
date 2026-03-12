@@ -4,6 +4,10 @@ RUN --mount=type=cache,target=/var/cache \
     dnf do -y --action=install \
         waydroid \
         waydroid-helper \
+        libadwaita \
+        python3-aiofiles \
+        python3-httpx \
+        vte291-gtk4 \
         chezmoi \
         zoxide \
         starship \
