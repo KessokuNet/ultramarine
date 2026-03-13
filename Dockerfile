@@ -15,7 +15,6 @@ RUN --mount=type=cache,target=/var/cache \
     fakeroot \
     chezmoi \
     zoxide \
-    nodejs \
     deno \
     bun-bin \
     eza \
