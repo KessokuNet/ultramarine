@@ -11,7 +11,13 @@ RUN --mount=type=cache,target=/var/cache \
         fakeroot \
         chezmoi \
         zoxide \
-        starship \
-        && dnf clean all
+        nodejs \
+        deno \
+        bun-bin \
+        eza \
+        sheldon \
+        rclone \
+        gh \
+    starship
 
 RUN sed -i~ -E 's/=.\$\(command -v (nft|ip6?tables-legacy).*/=/g' /usr/lib/waydroid/data/scripts/waydroid-net.sh
