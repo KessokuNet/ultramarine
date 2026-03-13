@@ -1,4 +1,6 @@
-FROM ghcr.io/ultramarine-linux/plasma-bootc:43
+
+ARG BASE_FLAVOR
+FROM ghcr.io/ultramarine-linux/plasma-bootc:43${BASE_FLAVOR}
 LABEL org.opencontainers.image.source=https://github.com/KessokuNet/ultramarine
 
 # craft DNF transaction

@@ -7,9 +7,9 @@ name: Docker
 
 on:
   schedule:
-    - cron: '17 7 * * *'
+    - cron: "17 7 * * *"
   push:
-    branches: [ "main" ]
+    branches: ["main"]
 
 env:
   # Use docker.io for Docker Hub if empty
@@ -17,11 +17,12 @@ env:
   # github.repository as <account>/<repo>
   IMAGE_NAME: ${{ github.repository }}
 
-
 jobs:
   build:
-
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        nvidia: [true, false]
     permissions:
       contents: read
       packages: write
@@ -30,6 +31,14 @@ jobs:
       id-token: write
 
     steps:
+      - name: Set tag suffix
+        run: |
+          if [ "${{ matrix.nvidia }}" = "true" ]; then
+            echo "TAG_SUFFIX=-nvidia" >> "$GITHUB_ENV"
+          else
+            echo "TAG_SUFFIX=" >> "$GITHUB_ENV"
+          fi
+
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -39,7 +48,7 @@ jobs:
         if: github.event_name != 'pull_request'
         uses: sigstore/cosign-installer@59acb6260d9c0ba8f4a2f9d9b48431a222b68e20 #v3.5.0
         with:
-          cosign-release: 'v2.2.4'
+          cosign-release: "v2.2.4"
 
       # Set up BuildKit Docker container builder to be able to build
       # multi-platform images and export cache
@@ -64,23 +73,27 @@ jobs:
         uses: docker/metadata-action@96383f45573cb7f253c731d3b3ab81c87ef81934 # v5.0.0
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          flavor: |
+            suffix=${{ env.TAG_SUFFIX }},onlatest=true
 
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
-      - name: Build and push Docker image
+      - name: Build and push Docker image (nvidia=${{ matrix.nvidia }})
         id: build-and-push
         uses: docker/build-push-action@0565240e2d4ab88bba5387d719585280857ece09 # v5.0.0
         with:
           context: .
+          build-args: |
+            BASE_FLAVOR=${{ env.TAG_SUFFIX }}
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=gha,scope=build-${{ matrix.nvidia }}
+          cache-to: type=gha,mode=max,scope=build-${{ matrix.nvidia }}
 
       # Sign the resulting Docker image digest except on PRs.
       # This will only write to the public Rekor transparency log when the Docker
-      # repository is public to avoid leaking data.  If you would like to publish
+      # repository is public to avoid leaking data. If you would like to publish
       # transparency data even for private images, pass --force to cosign below.
       # https://github.com/sigstore/cosign
       - name: Sign the published Docker image
