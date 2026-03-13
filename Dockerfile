@@ -29,4 +29,4 @@ RUN --mount=type=cache,target=/var/cache \
 
 RUN sed -i~ -E 's/=.\$\(command -v (nft|ip6?tables-legacy).*/=/g' /usr/lib/waydroid/data/scripts/waydroid-net.sh
 RUN sed -i -E 's/^(VARIANT_ID=)\"?plasma\"?$/\1plasma-kessokunet/' /usr/lib/os-release
-RUN sed -i -E 's/\(Plasma Edition\)/\(KessokuNet\)/g' /usr/lib/os-release
+RUN sed -i -E 's/Plasma Edition/KessokuNet/g' /usr/lib/os-release
