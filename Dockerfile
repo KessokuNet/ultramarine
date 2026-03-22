@@ -28,7 +28,7 @@ RUN --mount=type=cache,target=/var/cache \
     ceph-common \
     starship
 
-RUN setcap cap_sys_admin+p /usr/bin/sunshine
+# RUN setcap cap_sys_admin+p /usr/bin/sunshine
 
 RUN sed -i~ -E 's/=.\$\(command -v (nft|ip6?tables-legacy).*/=/g' /usr/lib/waydroid/data/scripts/waydroid-net.sh
 RUN sed -i -E 's/^(VARIANT_ID=)\"?plasma\"?$/\1plasma-kessokunet/' /usr/lib/os-release
