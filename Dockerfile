@@ -23,6 +23,9 @@ RUN --mount=type=cache,target=/var/cache \
     rclone \
     just \
     tailscale \
+    mangohud \
+    gamemode \
+    mangohud-mangoplot \
     gh \
     Sunshine \
     ceph-common \
