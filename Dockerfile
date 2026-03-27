@@ -26,6 +26,9 @@ RUN --mount=type=cache,target=/var/cache \
     mangohud \
     gamemode \
     mangohud-mangoplot \
+    cloud-hypervisor \
+    virt-manager \
+    qemu-kvm \
     gh \
     Sunshine \
     ceph-common \
