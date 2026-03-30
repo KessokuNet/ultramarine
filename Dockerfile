@@ -31,6 +31,9 @@ RUN --mount=type=cache,target=/var/cache \
     qemu-kvm \
     gh \
     Sunshine \
+    coolercontrol \
+    coolercontrold \
+    screen \
     ceph-common \
     starship
 
