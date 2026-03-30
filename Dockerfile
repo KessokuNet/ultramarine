@@ -33,6 +33,7 @@ RUN --mount=type=cache,target=/var/cache \
     Sunshine \
     coolercontrol \
     coolercontrold \
+    lm_sensors \
     screen \
     ceph-common \
     starship
