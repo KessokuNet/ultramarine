@@ -35,6 +35,7 @@ RUN --mount=type=cache,target=/var/cache \
     coolercontrold \
     lm_sensors \
     screen \
+    plasma-bigscreen \
     ceph-common \
     starship
 
