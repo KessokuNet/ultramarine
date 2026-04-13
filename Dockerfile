@@ -5,6 +5,8 @@ LABEL org.opencontainers.image.source=https://github.com/KessokuNet/ultramarine
 
 # craft DNF transaction
 RUN dnf copr enable -y lizardbyte/beta
+# todo: probably consider doing my own cappy DX fork
+# mmsi doesnt need all this
 RUN --mount=type=cache,target=/var/cache \
     dnf do -y --action=install \
     waydroid \
@@ -35,6 +37,10 @@ RUN --mount=type=cache,target=/var/cache \
     coolercontrold \
     lm_sensors \
     screen \
+    zig \
+    mold \
+    sccache \
+    youki \
     plasma-bigscreen \
     ceph-common \
     starship
