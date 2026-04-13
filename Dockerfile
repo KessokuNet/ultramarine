@@ -5,6 +5,8 @@ LABEL org.opencontainers.image.source=https://github.com/KessokuNet/ultramarine
 
 # craft DNF transaction
 RUN dnf copr enable -y lizardbyte/beta
+RUN rpm --import https://downloads.1password.com/linux/keys/1password.asc
+RUN sh -c 'echo -e "[1password]\nname=1Password Stable Channel\nbaseurl=https://downloads.1password.com/linux/rpm/stable/\$basearch\nenabled=1\ngpgcheck=1\nrepo_gpgcheck=1\ngpgkey=\"https://downloads.1password.com/linux/keys/1password.asc\"" > /etc/yum.repos.d/1password.repo'
 # todo: probably consider doing my own cappy DX fork
 # mmsi doesnt need all this
 RUN --mount=type=cache,target=/var/cache \
@@ -43,6 +45,8 @@ RUN --mount=type=cache,target=/var/cache \
     youki \
     plasma-bigscreen \
     ceph-common \
+    1password \
+    op \
     starship
 
 # RUN setcap cap_sys_admin+p /usr/bin/sunshine
