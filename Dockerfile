@@ -30,7 +30,9 @@ RUN --mount=type=cache,target=/var/cache \
     mangohud \
     gamemode \
     mangohud-mangoplot \
-    cloud-hypervisor \
+    cloud-hypervisor-nightly \
+    qemu-system-riscv \
+    libvirt-daemon-driver-ch \
     virt-manager \
     qemu-kvm \
     gh \
