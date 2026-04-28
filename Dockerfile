@@ -49,6 +49,10 @@ RUN --mount=type=cache,target=/var/cache \
     ceph-common \
     1password \
     op \
+    libva-utils \
+    libva \
+    mesa-va-drivers \
+    gstreamer1-vaapi \
     starship
 
 # RUN setcap cap_sys_admin+p /usr/bin/sunshine
