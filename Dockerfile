@@ -1,12 +1,10 @@
 
 ARG BASE_FLAVOR
-FROM ghcr.io/ultramarine-linux/plasma-bootc:43${BASE_FLAVOR}
+FROM ghcr.io/ultramarine-linux/plasma-bootc:44${BASE_FLAVOR}
 LABEL org.opencontainers.image.source=https://github.com/KessokuNet/ultramarine
 
 # craft DNF transaction
 RUN dnf copr enable -y lizardbyte/beta
-RUN rpm --import https://downloads.1password.com/linux/keys/1password.asc
-RUN sh -c 'echo -e "[1password]\nname=1Password Stable Channel\nbaseurl=https://downloads.1password.com/linux/rpm/stable/\$basearch\nenabled=1\ngpgcheck=1\nrepo_gpgcheck=1\ngpgkey=\"https://downloads.1password.com/linux/keys/1password.asc\"" > /etc/yum.repos.d/1password.repo'
 # todo: probably consider doing my own cappy DX fork
 # mmsi doesnt need all this
 RUN --mount=type=cache,target=/var/cache \
@@ -30,25 +28,13 @@ RUN --mount=type=cache,target=/var/cache \
     mangohud \
     gamemode \
     mangohud-mangoplot \
-    cloud-hypervisor-nightly \
-    qemu-system-riscv \
-    libvirt-daemon-driver-ch \
     virt-manager \
     qemu-kvm \
     gh \
-    Sunshine \
-    coolercontrol \
-    coolercontrold \
     lm_sensors \
     screen \
-    zig \
-    mold \
-    sccache \
     youki \
-    plasma-bigscreen \
     ceph-common \
-    1password \
-    op \
     libva-utils \
     libva \
     mesa-va-drivers \
@@ -60,5 +46,3 @@ RUN --mount=type=cache,target=/var/cache \
 RUN sed -i~ -E 's/=.\$\(command -v (nft|ip6?tables-legacy).*/=/g' /usr/lib/waydroid/data/scripts/waydroid-net.sh
 RUN sed -i -E 's/^(VARIANT_ID=)\"?plasma\"?$/\1plasma-kessokunet/' /usr/lib/os-release
 RUN sed -i -E 's/Plasma Edition/KessokuNet/g' /usr/lib/os-release
-
-RUN echo ntsync | sudo tee /usr/lib/modules-load.d/ntsync.conf
