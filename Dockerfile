@@ -5,10 +5,12 @@ LABEL org.opencontainers.image.source=https://github.com/KessokuNet/ultramarine
 
 # craft DNF transaction
 RUN dnf copr enable -y lizardbyte/beta
-# todo: probably consider doing my own cappy DX fork
-# mmsi doesnt need all this
+RUN dnf config-manager addrepo --from-repofile=https://negativo17.org/repos/fedora-multimedia.repo
 RUN --mount=type=cache,target=/var/cache \
-    dnf do -y --action=install \
+    dnf do -y \
+    --action=remove \
+    ffmpeg-free \
+    --action=install \
     waydroid \
     waydroid-helper \
     libadwaita \
@@ -39,6 +41,8 @@ RUN --mount=type=cache,target=/var/cache \
     libva \
     mesa-va-drivers \
     gstreamer1-vaapi \
+    ffmpeg \
+    libde265 \
     starship
 
 # RUN setcap cap_sys_admin+p /usr/bin/sunshine

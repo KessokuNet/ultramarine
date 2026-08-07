@@ -1,0 +1,21 @@
+FROM ghcr.io/kessokunet/ultramarine:latest
+
+# Copy environment files into the image for reproducibility
+RUN mkdir -p /var/um/env
+COPY . /var/um/env
+
+# craft DNF transaction
+RUN dnf copr enable -y lizardbyte/beta
+
+# Insert your changes here, the following RUN directive commits changes from environment.toml
+RUN --mount=type=cache,target=/var/cache \
+    um env apply-changes
+
+# rootless podman/buildah needs setuid on newuidmap/newgidmap
+RUN chmod u+s /usr/bin/newuidmap /usr/bin/newgidmap
+
+# Force overlayfs whiteout so Mesa libs get properly committed
+# RUN rm -f /usr/lib64/libEGL_mesa.so.0.0.0 /usr/lib64/gbm/dri_gbm.so
+
+# Upgrade Mesa and install Steam in a separate layer so overlayfs writes new content
+# RUN dnf upgrade -y mesa-libEGL mesa-libGL mesa-dri-drivers && dnf install -y steam
