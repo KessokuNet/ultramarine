@@ -11,6 +11,16 @@ RUN dnf copr enable -y lizardbyte/beta
 RUN --mount=type=cache,target=/var/cache \
     um env apply-changes
 
+# apply-changes can upgrade the kernel past the base image's (e.g. kernel-modules-extra
+# pulls a matching kernel), leaving the new kernel without an initramfs and an orphaned
+# module dir holding the old one. Drop stale module dirs and rebuild for the installed kernel.
+RUN KVER="$(rpm -q --qf '%{VERSION}-%{RELEASE}.%{ARCH}\n' kernel-core | sort -V | tail -n 1)" && \
+    find /usr/lib/modules -mindepth 1 -maxdepth 1 ! -name "$KVER" -exec rm -rf {} + && \
+    DRACUT_NO_XATTR=1 dracut --no-hostonly --kver "$KVER" --reproducible --zstd -v --add ostree --add bootc \
+      -f "/usr/lib/modules/$KVER/initramfs.img" && \
+    chmod 0600 "/usr/lib/modules/$KVER/initramfs.img" && \
+    setfattr -n user.component -v "initramfs" "/usr/lib/modules/$KVER/initramfs.img"
+
 # rootless podman/buildah needs setuid on newuidmap/newgidmap
 RUN chmod u+s /usr/bin/newuidmap /usr/bin/newgidmap
 
@@ -19,3 +29,6 @@ RUN chmod u+s /usr/bin/newuidmap /usr/bin/newgidmap
 
 # Upgrade Mesa and install Steam in a separate layer so overlayfs writes new content
 # RUN dnf upgrade -y mesa-libEGL mesa-libGL mesa-dri-drivers && dnf install -y steam
+
+# Fail the build on a broken bootc image (e.g. multiple kernels, missing initramfs)
+RUN bootc container lint
