@@ -24,6 +24,10 @@ RUN KVER="$(rpm -q --qf '%{VERSION}-%{RELEASE}.%{ARCH}\n' kernel-core | sort -V 
 # rootless podman/buildah needs setuid on newuidmap/newgidmap
 RUN chmod u+s /usr/bin/newuidmap /usr/bin/newgidmap
 
+# unlock amdgpu overdrive (voltage/clock control) for CoreCtrl
+RUN mkdir -p /usr/lib/bootc/kargs.d && \
+    printf 'kargs = ["amdgpu.ppfeaturemask=0xffffffff"]\n' > /usr/lib/bootc/kargs.d/10-amdgpu.toml
+
 # Force overlayfs whiteout so Mesa libs get properly committed
 # RUN rm -f /usr/lib64/libEGL_mesa.so.0.0.0 /usr/lib64/gbm/dri_gbm.so
 
