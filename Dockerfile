@@ -6,6 +6,9 @@ LABEL org.opencontainers.image.source=https://github.com/KessokuNet/ultramarine
 # craft DNF transaction
 RUN dnf copr enable -y lizardbyte/beta
 RUN dnf config-manager addrepo --from-repofile=https://negativo17.org/repos/fedora-multimedia.repo
+# Keep Plasma in lockstep with Fedora updates; the base image lags behind
+RUN --mount=type=cache,target=/var/cache \
+    dnf upgrade -y --refresh --exclude='kernel*'
 RUN --mount=type=cache,target=/var/cache \
     dnf do -y \
     --action=remove \

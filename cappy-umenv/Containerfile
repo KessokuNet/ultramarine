@@ -34,5 +34,9 @@ RUN mkdir -p /usr/lib/bootc/kargs.d && \
 # Upgrade Mesa and install Steam in a separate layer so overlayfs writes new content
 # RUN dnf upgrade -y mesa-libEGL mesa-libGL mesa-dri-drivers && dnf install -y steam
 
+# Fail the build if kwin and kscreenlocker come from different Plasma releases
+RUN test "$(rpm -q --qf '%{VERSION}' kwin)" = "$(rpm -q --qf '%{VERSION}' kscreenlocker)" || \
+    { rpm -q kwin kscreenlocker; exit 1; }
+
 # Fail the build on a broken bootc image (e.g. multiple kernels, missing initramfs)
 RUN bootc container lint
