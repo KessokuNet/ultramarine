@@ -39,4 +39,5 @@ RUN test "$(rpm -q --qf '%{VERSION}' kwin)" = "$(rpm -q --qf '%{VERSION}' kscree
     { rpm -q kwin kscreenlocker; exit 1; }
 
 # Fail the build on a broken bootc image (e.g. multiple kernels, missing initramfs)
-RUN bootc container lint
+# runtime-deps (bootc 1.17) chokes on the /usr/local -> /var/usrlocal symlink
+RUN bootc container lint --skip runtime-deps
